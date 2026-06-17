@@ -1,0 +1,38 @@
+# Dynamic CDR Decoder
+
+## Objective
+Develop a dynamic decoder for ASN.1 encoded IMS VoLTE CDR files.
+
+## Files
+- ims.asn1 (ASN.1 schema)
+- Sample DAT file
+- Python decoder code
+
+## Tech Stack
+- Python
+-Django,MySQL
+- ASN.1
+- pyasn1 / asn1tools
+- JSON
+
+CDR Decoder — Progress Update
+Done:
+Built BER/ASN.1 decoder (cdr_decoder.py) — decodes .dat CDR files using ims.asn1 schema into JSON
+Tested on NZDLVOLTE202603201155167848.dat — all 10 records decode correctly (caller/called no., duration, timestamps, IMSI, IMEI, codecs, etc.)
+Set up Django project (cdr_project, cdr_app, decoder folders) with DRF + MySQL client
+Created models: IMSVoiceRecord (78 fields) and CDRRule (dynamic rules — field, operator, value, action stored in DB, no hardcoding)
+Wrote backend logic: views.py (upload → decode → save → apply rules), rule_engine.py (reads rules from DB dynamically), serializers.py, urls.py
+API endpoints ready: /api/upload/, /api/records/, /api/rules/
+Built basic HTML/JS dashboard — upload file, view records table, add/delete rules
+
+Stuck on:
+Django migrations not creating tables in MySQL (telecom_cdr_db)
+makemigrations / migrate run with exit code 0, no errors, but no output and no tables appear in DBeaver
+Terminal confirmed working (echo test passes), so not a frozen shell issue
+My Migrations are not working simply skipping execution commands 
+like: python manage.py makemigrations, python manage.py migrate, python manage.py runserver or any other cmd for execution & running servers
+because of which unable to connect it on localhost for frontend and backend execution 
+
+Need help with:
+Debugging why migrations silently produce no tables, skipping execution cmds
+Django + MySQL + Windows gotchas (driver mismatch, missing migrations/__init__.py, etc.)
